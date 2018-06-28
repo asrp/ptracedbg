@@ -166,11 +166,14 @@ def line_numbers():
 
 def save_state(skip_save=False):
     global child_pid, parent_process, child_process, process
-    c_func_call('make_fork')    
+    old_regs = process.getregs()
+    c_func_call('make_fork')
     child_pid = read_int('pid')
     parent_process = process
     child_process = process = debugger.addProcess(child_pid, False)
     process.cont()
+    process.waitSignals(signal.SIGSTOP)
+    process.setregs(old_regs)
     if not skip_save:
         states.append(parent_process)
 
