@@ -27,3 +27,19 @@ Then try some commands
     >>> wait_for_count(4)
     >>> load_state()
     >>> wait_for_count(4)
+
+To run part 3
+
+    cd sample3
+    gcc -rdynamic -fPIC -gdwarf-2 sample3.c -ldl
+    gcc -shared -x c -o library.so -fPIC library.c
+    python -i tutorial3.py
+
+Then try some commands
+
+    >>> reload_library()
+    >>> c_func_call("print_memory", starts["library.so"])
+    >>> run_c('((void (**)(void))primitives)[1]();')
+    >>> iter_()
+    >>> for _ in range(60):
+    ...     run_loop()
