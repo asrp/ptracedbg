@@ -11,7 +11,7 @@
 #include <dlfcn.h>
 
 int foobar = 12;
-int count;
+int count = -1;
 int pid;
 void* dlrun_once;
 void* dllibrary;

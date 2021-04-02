@@ -86,14 +86,16 @@ def look(addr=None):
         hexa = ' '.join(hexa[i:i+2] for i in range(0, len(hexa), 2))
         print(str(i).ljust(4), hexa.ljust(24), instr.text.lower())
 
-def read_int(var_name):
+int_sizes = {32: ('h', 2), 64: ('i', 4)}
+
+def read_int(var_name, bits=32):
     addr = start + c_variables[var_name]
-    type_, size = 'h', 2
+    type_, size = int_sizes[bits]
     return struct.unpack(type_, process.readBytes(addr, size))[0]
 
-def write_int(var_name, value):
+def write_int(var_name, value, bits=32):
     addr = start + c_variables[var_name]
-    type_, size = 'h', 2
+    type_, size = int_sizes[bits]
     process.writeBytes(addr, struct.pack(type_, value))
 
 def c_func_call(func_name, _start=None):
@@ -184,7 +186,7 @@ def save_state(skip_save=False):
     global child_pid, parent_process, child_process, process
     old_regs = process.getregs()
     c_func_call('make_fork')
-    child_pid = read_int('pid')
+    child_pid = read_int('pid', bits=64)
     parent_process = process
     child_process = process = debugger.addProcess(child_pid, False)
     process.cont()
@@ -276,3 +278,4 @@ if __name__ == '__main__':
     atexit.register(cleanup)
     c_globals.append("void* dllibrary")
     c_lib_globals = []
+    wait_for_count(0)

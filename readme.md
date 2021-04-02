@@ -39,6 +39,8 @@ Then try some commands
 
     >>> reload_library()
     >>> c_func_call("print_memory", starts["library.so"])
+    >>> c_lib_globals.extend(["int* memory", "int* program_counter",
+    ...                       "void* toggle", "void* primitives"])
     >>> run_c('((void (**)(void))primitives)[1]();')
     >>> iter_()
     >>> for _ in range(60):
